@@ -68,7 +68,7 @@ Table ventas {
 
 Table ventas_detalles {
   id bigint [pk, not null, increment]
-  factura bigint [not null] 
+  factura bigint [not null]
   producto bigint [not null]
   precio_de_venta decimal(12,2) [not null]
   cantidad int [not null, default: 1]
