@@ -1,0 +1,88 @@
+Table proveedores {
+  nit bigint [pk, not null, unique]
+  digito_verificacion int
+  nombre varchar(255) [not null]
+  dir_primario varchar(255) [not null]
+  dir_secundario varchar(255) [not null]
+  dir_indicativo varchar(255) [not null]
+  dir_complemento varchar(255)
+  dir_barrio varchar(255) [not null]
+  dir_ciudad varchar(255) [not null]
+  telefono varchar(20) [not null]
+  pagina_web varchar(255)
+}
+
+Table clientes {
+  nit bigint [pk, not null, unique]
+  digito_verificacion int
+  nombre varchar(255) [not null]
+  dir_primario varchar(255) [not null]
+  dir_secundario varchar(255) [not null]
+  dir_indicativo varchar(255) [not null]
+  dir_complemento varchar(255)
+  dir_barrio varchar(255) [not null]
+  dir_ciudad varchar(255) [not null]
+}
+
+Table telefonos_clientes {
+  id bigint [pk, not null, increment]
+  cliente_nit bigint [not null]
+  numero varchar(20) [not null]
+}
+
+Table productos {
+  codigo bigint [pk, not null, unique]
+  nombre varchar(255) [not null]
+  precio decimal(12,2) [not null]
+  stock bigint [not null, default: 0]
+  categoria_id bigint [not null]
+
+  checks {
+    `stock >= 0` [name: 'chk_producto_stock']
+  }
+}
+
+Table categorias {
+  id bigint [pk, not null, increment]
+  nombre varchar(255) [not null]
+  descripción varchar(500)
+}
+
+Table productos_proveedor {
+  id bigint [pk, not null, increment]
+  producto_codigo bigint [not null]
+  proveedor_nit bigint [not null, unique]
+}
+
+Table ventas {
+  numero_factura bigint [pk, not null, unique]
+  fecha timestamp [not null, default: 'now()']
+  cliente_nit bigint [not null]
+  descuento decimal(12,2) [not null, default: 0.00]
+  monto_final decimal(12,2)
+
+  checks {
+    `monto_final > 0` [name: 'chk_venta_monto_final']
+  }
+}
+
+Table ventas_detalles {
+  id bigint [pk, not null, increment]
+  factura bigint [not null] 
+  producto bigint [not null]
+  precio_de_venta decimal(12,2) [not null]
+  cantidad int [not null, default: 1]
+  monto_detalle decimal(12,2) [not null]
+
+  checks {
+    `monto_detalle = precio_de_venta * cantidad` [name: 'chk_ventas_detalles_monto_detalle']
+  }
+}
+
+Ref: telefonos_clientes.cliente_nit > clientes.nit
+Ref: productos.categoria_id > categorias.id
+Ref: productos_proveedor.producto_codigo > productos.codigo
+Ref: productos_proveedor.proveedor_nit - proveedores.nit
+Ref: ventas.cliente_nit > clientes.nit
+Ref: ventas_detalles.factura > ventas.numero_factura
+Ref: ventas_detalles.producto > productos.codigo
