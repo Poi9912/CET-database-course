@@ -1,0 +1,63 @@
+Table autores {
+  id bigint [primary key, not null, increment]
+  nombre varchar(255) [unique, not null]
+  nacionalidad varchar(255)
+  fecha_nacimiento date [not null, default: 'CURRENT_DATE()']
+
+  checks {
+    `fecha_nacimiento <= CURRENT_DATE()` [name: 'chk_fecha_nacimiento']
+  }
+}
+
+Table libros {
+  id bigint [primary key, not null, increment]
+  titulo varchar(500) [not null, unique]
+  lenguaje varchar(255) [not null]
+  numero_paginas integer [not null, default: 1]
+  libro_referenciado_id bigint [unique]
+}
+
+Table libros_autores {
+  libro_id bigint [not null]
+  autor_id bigint [not null]
+  
+  indexes {
+    (libro_id, autor_id) [pk] 
+  }
+}
+
+Table ediciones {
+  isbn varchar(255) [primary key, not null, unique]
+  libro_id bigint [not null]
+  anno date
+}
+
+Table copias {
+  id bigint [primary key, not null, increment]
+  edicion_isbn varchar(255) [not null]
+  numero_copias integer
+}
+
+Table usuarios {
+  dni bigint [primary key, not null, unique]
+  nombres varchar(255)
+  apellidos varchar(255)
+  domicilio varchar(500)
+}
+
+Table prestamos {
+  id bigint [primary key, not null, increment]
+  copia_id integer [not null]
+  usuario_id bigint [not null]
+  precio decimal(12,2) [not null, default: 0.00]
+  fecha_prestamo date [not null, default: 'CURRENT_DATE()']
+  fecha_devolucion date 
+}
+
+Ref: libros_autores.libro_id > libros.id
+Ref: libros_autores.autor_id > autores.id
+Ref: libros.id < ediciones.libro_id
+Ref: ediciones.isbn < copias.edicion_isbn
+Ref: prestamos.copia_id > copias.id
+Ref: prestamos.usuario_id > usuarios.dni
+Ref: libros.libro_referenciado_id - libros.id
