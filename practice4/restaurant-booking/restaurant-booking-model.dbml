@@ -1,0 +1,20 @@
+Table mesa {
+  id bigint [pk, not null, increment]
+  numero int [unique, not null]
+  capacidad int [not null]
+  ubicacion varchar
+}
+
+Table reserva {
+  id bigint [pk, increment]
+  numero_reserva varchar [unique, not null]
+  nombre_cliente varchar [not null]
+  telefono varchar [not null]
+  email varchar
+  cantidad_personas int [not null]
+  fecha_reserva date [not null]
+  hora_reserva time [not null]
+  mesa_id bigint [not null, ref: > mesa.id]
+  valor_deposito decimal [not null]
+  estado varchar [not null] // confirmada, cancelada, completada
+}

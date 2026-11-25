@@ -1,0 +1,35 @@
+Table editorial {
+  id bigint [pk, increment]
+  nombre varchar [unique, not null]
+}
+
+Table miembro {
+  id bigint [pk, increment]
+  numero_miembro varchar [unique, not null]
+  nombre varchar [not null]
+  apellido varchar [not null]
+  documento varchar [unique, not null]
+  email varchar [not null]
+  telefono varchar [not null]
+  fecha_registro date [not null]
+}
+
+Table libro {
+  id bigint [pk, increment]
+  isbn varchar [unique]
+  titulo varchar [not null]
+  autor varchar [not null]
+  editorial_id bigint [not null, ref: > editorial.id]
+  cantidad_total int [not null]
+  cantidad_disponible int [not null]
+}
+
+Table prestamo {
+  id bigint [pk, increment]
+  miembro_id bigint [not null, ref: > miembro.id]
+  libro_id bigint [not null, ref: > libro.id]
+  fecha_salida date [not null]
+  fecha_devolucion_prevista date [not null]
+  fecha_ingreso date
+  estado varchar [not null] // activo, devuelto, vencido
+}
