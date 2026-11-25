@@ -391,3 +391,23 @@ JOIN periodos AS pe
   ON pe.id = i.periodo_id
 WHERE i.estado IN ('creada', 'reservada', 'pendiente_por_pago')
 ORDER BY i.estado, i.fecha_inscripcion;
+
+-- Cantidad de estudiantes por curso y periodo
+SELECT
+  pe.nombre AS periodo,
+  pe.anio AS anio_periodo,
+  p.codigo AS codigo_curso,
+  p.nombre AS curso,
+  COUNT(DISTINCT i.estudiante_id) AS estudiantes_con_inscripcion,
+  COUNT(DISTINCT CASE
+    WHEN i.estado = 'activa' THEN i.estudiante_id
+  END) AS estudiantes_activos
+FROM periodos AS pe
+CROSS JOIN programas AS p
+LEFT JOIN inscripcion AS i
+  ON i.periodo_id = pe.id
+  AND i.programa_id = p.id
+GROUP BY
+  pe.id, pe.nombre, pe.anio,
+  p.id, p.codigo, p.nombre
+ORDER BY pe.anio, pe.nombre, p.nombre;
