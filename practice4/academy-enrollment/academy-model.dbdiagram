@@ -1,0 +1,167 @@
+{
+  "version": "4.0.0",
+  "darkMode": true,
+  "gridEnabling": false,
+  "currentViewName": null,
+  "defaultView": {
+    "detailLevel": "All",
+    "relationshipMode": "All",
+    "tablePositions": [
+      {
+        "name": "periodos",
+        "schemaName": "public",
+        "x": 528,
+        "y": 16
+      },
+      {
+        "name": "maestros",
+        "schemaName": "public",
+        "x": 16,
+        "y": 136
+      },
+      {
+        "name": "maestros_categorias",
+        "schemaName": "public",
+        "x": 528,
+        "y": 912
+      },
+      {
+        "name": "categorias",
+        "schemaName": "public",
+        "x": 16,
+        "y": 504
+      },
+      {
+        "name": "estudiante",
+        "schemaName": "public",
+        "x": 528,
+        "y": 536
+      },
+      {
+        "name": "programa",
+        "schemaName": "public",
+        "x": 528,
+        "y": 256
+      },
+      {
+        "name": "inscripcion",
+        "schemaName": "public",
+        "x": 952,
+        "y": 304
+      }
+    ],
+    "tableGroupCollapseStates": [],
+    "stickyNoteLayouts": [],
+    "referencePaths": [
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "maestros",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "maestro_id"
+        ],
+        "secondTableName": "programa",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "estudiante",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "estudiante_id"
+        ],
+        "secondTableName": "inscripcion",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "programa",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "programa_id"
+        ],
+        "secondTableName": "inscripcion",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "periodos",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "periodo_id"
+        ],
+        "secondTableName": "inscripcion",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "maestros",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "maestro_id"
+        ],
+        "secondTableName": "maestros_categorias",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "categorias",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "categoria_id"
+        ],
+        "secondTableName": "maestros_categorias",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "categorias",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "categoria"
+        ],
+        "secondTableName": "programa",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      }
+    ],
+    "elementPositions": [],
+    "groupCollapseStates": [],
+    "linkPaths": []
+  },
+  "views": {}
+}
