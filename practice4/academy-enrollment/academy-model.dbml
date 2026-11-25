@@ -24,6 +24,7 @@ Table maestros {
   documento varchar [unique, not null]
   email varchar [unique, not null]
   telefono varchar [unique, not null]
+  fecha_nacimiento date [not null]
 }
 
 Table maestros_categorias {
@@ -46,19 +47,22 @@ Table estudiante {
   segundo_nombre varchar
   primer_apellido varchar [not null]
   segundo_apellido varchar
+  tipodocumento tipos_documentos [not null, default: "cedula_de_ciudadania"]
   documento varchar [unique, not null]
   email varchar [unique, not null]
   telefono varchar [not null]
   fecha_nacimiento date [not null]
 }
 
-Table programa {
+Table programas {
   id bigint [pk, increment]
   codigo varchar [unique, not null]
   categoria bigint [not null, ref: > categorias.id]
   nombre varchar [not null]
   descripcion text
   maestro_id bigint [not null, ref: > maestros.id]
+  horas_semanales int [not null]
+  semanas int [not null]
 }
 
 Enum estado_inscripcion {
@@ -73,8 +77,10 @@ Enum estado_inscripcion {
 Table inscripcion {
   id bigint [pk, increment]
   estudiante_id bigint [not null, ref: > estudiante.id]
-  programa_id bigint [not null, ref: > programa.id]
+  programa_id bigint [not null, ref: > programas.id]
   periodo_id bigint [not null, ref: > periodos.id]
   fecha_inscripcion date [not null]
   estado estado_inscripcion [not null, default: "creada"]
 }
+
+Ref: programas.(maestro_id, categoria) > maestros_categorias.(maestro_id, categoria_id)

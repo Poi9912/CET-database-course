@@ -48,6 +48,18 @@
         "schemaName": "public",
         "x": 952,
         "y": 304
+      },
+      {
+        "name": "programas",
+        "schemaName": "public",
+        "x": 16,
+        "y": 1090
+      },
+      {
+        "name": "horarios",
+        "schemaName": "public",
+        "x": 284.763671875,
+        "y": 1090
       }
     ],
     "tableGroupCollapseStates": [],
@@ -156,6 +168,85 @@
         "secondTableName": "programa",
         "secondSchemaName": "public",
         "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "maestro_id",
+          "categoria"
+        ],
+        "firstTableName": "programa",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "maestro_id",
+          "categoria_id"
+        ],
+        "secondTableName": "maestros_categorias",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "categorias",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "categoria"
+        ],
+        "secondTableName": "programas",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "maestros",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "maestro_id"
+        ],
+        "secondTableName": "programas",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "programas",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "programa_id"
+        ],
+        "secondTableName": "inscripcion",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "maestro_id",
+          "categoria"
+        ],
+        "firstTableName": "programas",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "maestro_id",
+          "categoria_id"
+        ],
+        "secondTableName": "maestros_categorias",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
         "checkPoints": []
       }
     ],
