@@ -257,7 +257,7 @@ WHERE NOT EXISTS (
     AND i.periodo_id = @periodo_2026_ii
 );
 
--- Inscripciones para tres estudiantes en el periodo_2026_ii.
+-- Inscripciones para tres estudiantes en el periodo_2027_i.
 -- 5 quedan sin inscripciones.
 INSERT INTO inscripcion (
   estudiante_id, programa_id, periodo_id, fecha_inscripcion, estado
@@ -282,7 +282,7 @@ WHERE NOT EXISTS (
   FROM inscripcion AS i
   WHERE i.estudiante_id = e.id
     AND i.programa_id = p.id
-    AND i.periodo_id = @periodo_2026_ii
+    AND i.periodo_id = @periodo_2027_i
 );
 
 
