@@ -207,13 +207,27 @@ WHERE NOT EXISTS (
   WHERE nombre = '2026-II' AND anio = 2026
 );
 
+INSERT INTO periodos (nombre, anio, fecha_inicio, fecha_fin)
+SELECT '2027-I', 2027, '2027-01-01', '2026-06-30'
+WHERE NOT EXISTS (
+  SELECT 1
+  FROM periodos
+  WHERE nombre = '2027-I' AND anio = 2027
+);
+
 SELECT id INTO @periodo_2026_ii
 FROM periodos
 WHERE nombre = '2026-II' AND anio = 2026
 ORDER BY id
 LIMIT 1;
 
--- Inscripciones para los primeros cinco estudiantes.
+SELECT id INTO @periodo_2027_i
+FROM periodos
+WHERE nombre = '2027-I' AND anio = 2027
+ORDER BY id
+LIMIT 1;
+
+-- Inscripciones para los primeros cinco estudiantes en el periodo_2026_ii.
 -- 3 quedan sin inscripciones.
 INSERT INTO inscripcion (
   estudiante_id, programa_id, periodo_id, fecha_inscripcion, estado
@@ -243,6 +257,33 @@ WHERE NOT EXISTS (
     AND i.periodo_id = @periodo_2026_ii
 );
 
+INSERT INTO inscripcion (
+  estudiante_id, programa_id, periodo_id, fecha_inscripcion, estado
+)
+SELECT
+  e.id,
+  p.id,
+  @periodo_2027_i,
+  '2027-01-20',
+  'activa'
+FROM (
+  SELECT '200100' AS documento, 'TEC-COC-001' AS codigo
+  UNION ALL SELECT '300700', 'TEC-CON-001'
+  UNION ALL SELECT '500900', 'CUR-EXC-001'
+) AS seed
+JOIN estudiantes AS e
+  ON e.documento = seed.documento
+JOIN programas AS p
+  ON p.codigo = seed.codigo
+WHERE NOT EXISTS (
+  SELECT 1
+  FROM inscripcion AS i
+  WHERE i.estudiante_id = e.id
+    AND i.programa_id = p.id
+    AND i.periodo_id = @periodo_2026_ii
+);
+
+
 -- === Consultas previas === --
 
 -- Todos los estudiantes y sus cursos inscritos, instructores y periodos
@@ -270,7 +311,7 @@ LEFT JOIN periodos AS pe
   ON pe.id = i.periodo_id
 ORDER BY e.primer_apellido, e.primer_nombre, i.id;
 
--- Estudiantes que aún no tienen inscripciones
+-- Estudiantes que aún no tienen inscripciones en periodo_2026_ii
 SELECT
   e.id AS estudiante_id,
   CONCAT_WS(' ', e.primer_nombre, e.segundo_nombre,
@@ -282,4 +323,69 @@ FROM estudiantes AS e
 LEFT JOIN inscripcion AS i
   ON i.estudiante_id = e.id
 WHERE i.id IS NULL
+AND i.periodo = @periodo_2026_ii
 ORDER BY e.primer_apellido, e.primer_nombre;
+
+-- Estudiantes que aún no tienen inscripciones en periodo_2027_i
+SELECT
+  e.id AS estudiante_id,
+  CONCAT_WS(' ', e.primer_nombre, e.segundo_nombre,
+            e.primer_apellido, e.segundo_apellido) AS estudiante,
+  e.documento AS documento_estudiante,
+  e.email,
+  e.telefono
+FROM estudiantes AS e
+LEFT JOIN inscripcion AS i
+  ON i.estudiante_id = e.id
+WHERE i.id IS NULL
+AND i.periodo = @periodo_2027_i
+ORDER BY e.primer_apellido, e.primer_nombre;
+
+-- Inscripciones por curso e instructor en cada periodo
+SELECT
+  pe.nombre AS periodo,
+  pe.anio AS anio_periodo,
+  p.codigo AS codigo_curso,
+  p.nombre AS curso,
+  CONCAT_WS(' ', m.primer_nombre, m.segundo_nombre,
+            m.primer_apellido, m.segundo_apellido) AS instructor,
+  COUNT(i.id) AS total_inscripciones,
+  COUNT(CASE WHEN i.estado = 'activa' THEN i.id END) AS inscripciones_activas,
+  COUNT(CASE WHEN i.estado = 'pendiente_por_pago' THEN i.id END)
+    AS pendientes_de_pago
+FROM programas AS p
+JOIN maestros AS m
+  ON m.id = p.maestro_id
+CROSS JOIN periodos AS pe
+LEFT JOIN inscripcion AS i
+  ON i.programa_id = p.id
+  AND i.periodo_id = pe.id
+GROUP BY
+  pe.id, pe.nombre, pe.anio,
+  p.id, p.codigo, p.nombre,
+  m.id, m.primer_nombre, m.segundo_nombre,
+  m.primer_apellido, m.segundo_apellido
+ORDER BY pe.anio, pe.nombre, p.nombre;
+
+-- Inscripciones que requieren seguimiento administrativo
+SELECT
+  i.id AS inscripcion_id,
+  CONCAT_WS(' ', e.primer_nombre, e.segundo_nombre,
+            e.primer_apellido, e.segundo_apellido) AS estudiante,
+  p.nombre AS curso,
+  CONCAT_WS(' ', m.primer_nombre, m.segundo_nombre,
+            m.primer_apellido, m.segundo_apellido) AS instructor,
+  pe.nombre AS periodo,
+  i.fecha_inscripcion,
+  i.estado
+FROM inscripcion AS i
+JOIN estudiantes AS e
+  ON e.id = i.estudiante_id
+JOIN programas AS p
+  ON p.id = i.programa_id
+JOIN maestros AS m
+  ON m.id = p.maestro_id
+JOIN periodos AS pe
+  ON pe.id = i.periodo_id
+WHERE i.estado IN ('creada', 'reservada', 'pendiente_por_pago')
+ORDER BY i.estado, i.fecha_inscripcion;
