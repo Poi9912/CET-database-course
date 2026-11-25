@@ -227,7 +227,7 @@ WHERE nombre = '2027-I' AND anio = 2027
 ORDER BY id
 LIMIT 1;
 
--- Inscripciones para los primeros cinco estudiantes en el periodo_2026_ii.
+-- Inscripciones para cinco estudiantes en el periodo_2026_ii.
 -- 3 quedan sin inscripciones.
 INSERT INTO inscripcion (
   estudiante_id, programa_id, periodo_id, fecha_inscripcion, estado
@@ -257,6 +257,8 @@ WHERE NOT EXISTS (
     AND i.periodo_id = @periodo_2026_ii
 );
 
+-- Inscripciones para tres estudiantes en el periodo_2026_ii.
+-- 5 quedan sin inscripciones.
 INSERT INTO inscripcion (
   estudiante_id, programa_id, periodo_id, fecha_inscripcion, estado
 )
