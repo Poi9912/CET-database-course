@@ -324,8 +324,8 @@ SELECT
 FROM estudiantes AS e
 LEFT JOIN inscripcion AS i
   ON i.estudiante_id = e.id
+  AND i.periodo_id = @periodo_2026_ii
 WHERE i.id IS NULL
-AND i.periodo = @periodo_2026_ii
 ORDER BY e.primer_apellido, e.primer_nombre;
 
 -- Estudiantes que aún no tienen inscripciones en periodo_2027_i
@@ -339,8 +339,8 @@ SELECT
 FROM estudiantes AS e
 LEFT JOIN inscripcion AS i
   ON i.estudiante_id = e.id
+  AND i.periodo_id = @periodo_2027_i
 WHERE i.id IS NULL
-AND i.periodo = @periodo_2027_i
 ORDER BY e.primer_apellido, e.primer_nombre;
 
 -- Inscripciones por curso e instructor en cada periodo
