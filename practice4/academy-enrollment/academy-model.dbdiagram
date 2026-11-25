@@ -10,56 +10,44 @@
       {
         "name": "periodos",
         "schemaName": "public",
-        "x": 528,
-        "y": 16
+        "x": 1299.8920995927074,
+        "y": 356.793238978611
       },
       {
         "name": "maestros",
         "schemaName": "public",
         "x": 16,
-        "y": 136
+        "y": 464
       },
       {
         "name": "maestros_categorias",
         "schemaName": "public",
-        "x": 528,
-        "y": 912
+        "x": 473.88351940843944,
+        "y": 688
       },
       {
         "name": "categorias",
         "schemaName": "public",
-        "x": 16,
-        "y": 504
+        "x": 497.8590076896895,
+        "y": 236.3809821840788
       },
       {
         "name": "estudiante",
         "schemaName": "public",
-        "x": 528,
-        "y": 536
-      },
-      {
-        "name": "programa",
-        "schemaName": "public",
-        "x": 528,
-        "y": 256
+        "x": 14.995114697955131,
+        "y": 80.05558359708922
       },
       {
         "name": "inscripcion",
         "schemaName": "public",
-        "x": 952,
-        "y": 304
+        "x": 1276.5877528939407,
+        "y": 47.81286384335148
       },
       {
         "name": "programas",
         "schemaName": "public",
-        "x": 16,
-        "y": 1090
-      },
-      {
-        "name": "horarios",
-        "schemaName": "public",
-        "x": 284.763671875,
-        "y": 1090
+        "x": 977.1374157020197,
+        "y": 236.3809821840788
       }
     ],
     "tableGroupCollapseStates": [],
@@ -69,41 +57,11 @@
         "firstFieldNames": [
           "id"
         ],
-        "firstTableName": "maestros",
-        "firstSchemaName": "public",
-        "firstRelation": "1",
-        "secondFieldNames": [
-          "maestro_id"
-        ],
-        "secondTableName": "programa",
-        "secondSchemaName": "public",
-        "secondRelation": "*",
-        "checkPoints": []
-      },
-      {
-        "firstFieldNames": [
-          "id"
-        ],
         "firstTableName": "estudiante",
         "firstSchemaName": "public",
         "firstRelation": "1",
         "secondFieldNames": [
           "estudiante_id"
-        ],
-        "secondTableName": "inscripcion",
-        "secondSchemaName": "public",
-        "secondRelation": "*",
-        "checkPoints": []
-      },
-      {
-        "firstFieldNames": [
-          "id"
-        ],
-        "firstTableName": "programa",
-        "firstSchemaName": "public",
-        "firstRelation": "1",
-        "secondFieldNames": [
-          "programa_id"
         ],
         "secondTableName": "inscripcion",
         "secondSchemaName": "public",
@@ -153,38 +111,6 @@
         "secondTableName": "maestros_categorias",
         "secondSchemaName": "public",
         "secondRelation": "*",
-        "checkPoints": []
-      },
-      {
-        "firstFieldNames": [
-          "id"
-        ],
-        "firstTableName": "categorias",
-        "firstSchemaName": "public",
-        "firstRelation": "1",
-        "secondFieldNames": [
-          "categoria"
-        ],
-        "secondTableName": "programa",
-        "secondSchemaName": "public",
-        "secondRelation": "*",
-        "checkPoints": []
-      },
-      {
-        "firstFieldNames": [
-          "maestro_id",
-          "categoria"
-        ],
-        "firstTableName": "programa",
-        "firstSchemaName": "public",
-        "firstRelation": "*",
-        "secondFieldNames": [
-          "maestro_id",
-          "categoria_id"
-        ],
-        "secondTableName": "maestros_categorias",
-        "secondSchemaName": "public",
-        "secondRelation": "1",
         "checkPoints": []
       },
       {
