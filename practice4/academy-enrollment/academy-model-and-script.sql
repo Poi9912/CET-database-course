@@ -10,8 +10,15 @@
 -- como el maestro asignado.
 -- ============================================================
 
+-- === Base de datos === --
 
-CREATE TABLE periodos (
+CREATE DATABASE IF NOT EXISTS academia;
+
+USE academia;
+
+-- === Tablas === --
+
+CREATE TABLE IF NOT EXISTS periodos (
   id bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
   nombre varchar(255) NOT NULL,
   anio int NOT NULL,
@@ -19,7 +26,7 @@ CREATE TABLE periodos (
   fecha_fin date NOT NULL
 );
 
-CREATE TABLE maestros (
+CREATE TABLE IF NOT EXISTS maestros (
   id bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
   primer_nombre varchar(255) NOT NULL,
   segundo_nombre varchar(255),
@@ -32,18 +39,18 @@ CREATE TABLE maestros (
   fecha_nacimiento date NOT NULL
 );
 
-CREATE TABLE maestros_categorias (
+CREATE TABLE IF NOT EXISTS maestros_categorias (
   maestro_id bigint NOT NULL,
   categoria_id bigint NOT NULL,
   PRIMARY KEY (maestro_id, categoria_id)
 );
 
-CREATE TABLE categorias (
+CREATE TABLE IF NOT EXISTS categorias (
   id bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
   nombre varchar(255) UNIQUE NOT NULL
 );
 
-CREATE TABLE estudiante (
+CREATE TABLE IF NOT EXISTS estudiantes (
   id bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
   primer_nombre varchar(255) NOT NULL,
   segundo_nombre varchar(255),
@@ -56,7 +63,7 @@ CREATE TABLE estudiante (
   fecha_nacimiento date NOT NULL
 );
 
-CREATE TABLE programas (
+CREATE TABLE IF NOT EXISTS programas (
   id bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
   codigo varchar(255) UNIQUE NOT NULL,
   categoria bigint NOT NULL,
@@ -67,7 +74,7 @@ CREATE TABLE programas (
   semanas int NOT NULL
 );
 
-CREATE TABLE inscripcion (
+CREATE TABLE IF NOT EXISTS inscripcion (
   id bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
   estudiante_id bigint NOT NULL,
   programa_id bigint NOT NULL,
@@ -76,19 +83,16 @@ CREATE TABLE inscripcion (
   estado ENUM ('creada', 'reservada', 'pendiente_por_pago', 'aprobada', 'activa', 'retirada') NOT NULL DEFAULT "creada"
 );
 
+-- === LLaves foraneas === --
+
 ALTER TABLE maestros_categorias ADD FOREIGN KEY (maestro_id) REFERENCES maestros (id);
-
 ALTER TABLE maestros_categorias ADD FOREIGN KEY (categoria_id) REFERENCES categorias (id);
-
 ALTER TABLE programas ADD FOREIGN KEY (categoria) REFERENCES categorias (id);
-
 ALTER TABLE programas ADD FOREIGN KEY (maestro_id) REFERENCES maestros (id);
-
-ALTER TABLE inscripcion ADD FOREIGN KEY (estudiante_id) REFERENCES estudiante (id);
-
+ALTER TABLE inscripcion ADD FOREIGN KEY (estudiante_id) REFERENCES estudiantes (id);
 ALTER TABLE inscripcion ADD FOREIGN KEY (programa_id) REFERENCES programas (id);
-
 ALTER TABLE inscripcion ADD FOREIGN KEY (periodo_id) REFERENCES periodos (id);
-
 ALTER TABLE programas ADD FOREIGN KEY (maestro_id, categoria) REFERENCES maestros_categorias (maestro_id, categoria_id);
+
+-- === Pregarga de datos === --
 
