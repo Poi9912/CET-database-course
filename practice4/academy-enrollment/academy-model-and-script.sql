@@ -155,7 +155,7 @@ INSERT INTO maestros_categorias (maestro_id, categoria_id) VALUES
   (@maestro_desarrollo_excel, @cat_desarrollo),
   (@maestro_desarrollo_excel, @cat_excel),
   (@maestro_rrhh, @cat_rrhh)
-ON DUPLICATE KEY UPDATE categoria_id = VALUES(categoria_id);
+ON DUPLICATE KEY UPDATE categoria_id = categoria_id;
 
 -- Programas
 INSERT INTO programas (
@@ -173,6 +173,75 @@ INSERT INTO programas (
   ('CUR-EXC-001', @cat_excel, 'Curso Excel',
    'Curso de herramientas de Excel.', @maestro_desarrollo_excel, 6, 8)
 ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id);
+
+-- Estudiantes de prueba
+INSERT INTO estudiantes (
+  primer_nombre, segundo_nombre, primer_apellido, segundo_apellido,
+  documento, email, telefono, fecha_nacimiento
+) VALUES
+  ('Laura', 'María', 'Gómez', 'Ruiz',
+   '200500', 'laura.gomez@example.test', '3009005050', '2001-03-14'),
+  ('Juan', 'David', 'Martínez', 'Peña',
+   '200600', 'juan.martinez@example.test', '3009005051', '2000-07-22'),
+  ('Camila', 'Andrea', 'López', 'Díaz',
+   '200700', 'camila.lopez@example.test', '3009005052', '2002-11-05'),
+  ('Andrés', 'Felipe', 'Ramírez', 'Soto',
+   '200800', 'andres.ramirez@example.test', '3009005053', '1999-01-30'),
+  ('Valentina', 'Isabel', 'Herrera', 'Cruz',
+   '200100', 'valentina.herrera@example.test', '3009005054', '2001-09-18'),
+  ('Sebastián', 'Alejandro', 'Moreno', 'Gil',
+   '300700', 'sebastian.moreno@example.test', '3009005055', '2000-05-09'),
+  ('Daniela', 'Sofía', 'Vargas', 'León',
+   '500900', 'daniela.vargas@example.test', '3009005056', '2003-02-26'),
+  ('Nicolás', 'Esteban', 'Castro', 'Ríos',
+   '300300', 'nicolas.castro@example.test', '3009005057', '2002-12-11')
+ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id);
+
+
+-- Periodo requerido por la llave foránea de inscripcion
+INSERT INTO periodos (nombre, anio, fecha_inicio, fecha_fin)
+SELECT '2026-II', 2026, '2026-07-01', '2026-12-31'
+WHERE NOT EXISTS (
+  SELECT 1
+  FROM periodos
+  WHERE nombre = '2026-II' AND anio = 2026
+);
+
+SELECT id INTO @periodo_2026_ii
+FROM periodos
+WHERE nombre = '2026-II' AND anio = 2026
+ORDER BY id
+LIMIT 1;
+
+-- Inscripciones para los primeros cinco estudiantes.
+-- 3 quedan sin inscripciones.
+INSERT INTO inscripcion (
+  estudiante_id, programa_id, periodo_id, fecha_inscripcion, estado
+)
+SELECT
+  e.id,
+  p.id,
+  @periodo_2026_ii,
+  '2026-08-15',
+  'activa'
+FROM (
+  SELECT '200800' AS documento, 'TEC-COC-001' AS codigo
+  UNION ALL SELECT '200500', 'TEC-CON-001'
+  UNION ALL SELECT '200600', 'TEC-DES-001'
+  UNION ALL SELECT '200700', 'TEC-GH-001'
+  UNION ALL SELECT '300300', 'CUR-EXC-001'
+) AS seed
+JOIN estudiantes AS e
+  ON e.documento = seed.documento
+JOIN programas AS p
+  ON p.codigo = seed.codigo
+WHERE NOT EXISTS (
+  SELECT 1
+  FROM inscripcion AS i
+  WHERE i.estudiante_id = e.id
+    AND i.programa_id = p.id
+    AND i.periodo_id = @periodo_2026_ii
+);
 
 -- === Consultas previas === --
 
