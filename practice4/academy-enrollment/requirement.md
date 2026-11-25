@@ -1,0 +1,1 @@
+Gestión de inscripciones de una academia

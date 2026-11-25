@@ -1,0 +1,1 @@
+Inventario y ventas de una tienda de barrio

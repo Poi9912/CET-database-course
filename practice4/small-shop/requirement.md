@@ -1,0 +1,1 @@
+Control de préstamos de una **biblioteca** o de equipos de cómputo
