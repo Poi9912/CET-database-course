@@ -208,7 +208,7 @@ WHERE NOT EXISTS (
 );
 
 INSERT INTO periodos (nombre, anio, fecha_inicio, fecha_fin)
-SELECT '2027-I', 2027, '2027-01-01', '2026-06-30'
+SELECT '2027-I', 2027, '2027-01-01', '2027-06-30'
 WHERE NOT EXISTS (
   SELECT 1
   FROM periodos
@@ -411,3 +411,77 @@ GROUP BY
   pe.id, pe.nombre, pe.anio,
   p.id, p.codigo, p.nombre
 ORDER BY pe.anio, pe.nombre, p.nombre;
+
+-- Top 3 programas con mayor intensidad horaria total que no sean cursos de ofimática
+SELECT 
+  p.id AS programa_id,
+  p.codigo,
+  p.nombre AS programa,
+  c.nombre AS categoria,
+  p.horas_semanales,
+  p.semanas,
+  (p.horas_semanales * p.semanas) AS total_horas_programa,
+  CONCAT_WS(' ', m.primer_nombre, m.primer_apellido) AS instructor
+FROM programas AS p
+JOIN categorias AS c ON c.id = p.categoria
+JOIN maestros AS m ON m.id = p.maestro_id
+WHERE (p.horas_semanales >= 10 OR p.semanas > 12)
+  AND NOT c.nombre = 'Excel'
+ORDER BY total_horas_programa DESC, p.horas_semanales DESC
+LIMIT 3;
+
+-- Últimas 2 inscripciones pendientes de cobro o formalización en el periodo 2026-II
+SELECT 
+  i.id AS inscripcion_id,
+  CONCAT_WS(' ', e.primer_nombre, e.primer_apellido) AS estudiante,
+  e.telefono,
+  e.email,
+  p.nombre AS programa,
+  pe.nombre AS periodo,
+  i.fecha_inscripcion,
+  i.estado
+FROM inscripcion AS i
+JOIN estudiantes AS e ON e.id = i.estudiante_id
+JOIN programas AS p ON p.id = i.programa_id
+JOIN periodos AS pe ON pe.id = i.periodo_id
+WHERE pe.nombre = '2026-II'
+  AND (i.estado = 'pendiente_por_pago' OR i.estado = 'creada' OR i.estado = 'reservada')
+  AND NOT i.estado = 'retirada'
+ORDER BY i.fecha_inscripcion DESC, i.id DESC
+LIMIT 2;
+
+-- Top 5 inscripciones activas en programas formativos de alta intensidad horaria
+SELECT 
+  i.id AS inscripcion_id,
+  CONCAT_WS(' ', e.primer_nombre, e.primer_apellido) AS estudiante,
+  p.codigo AS codigo_programa,
+  p.nombre AS programa,
+  c.nombre AS categoria,
+  CONCAT_WS(' ', m.primer_nombre, m.primer_apellido) AS instructor,
+  i.fecha_inscripcion,
+  i.estado
+FROM inscripcion AS i
+JOIN estudiantes AS e ON e.id = i.estudiante_id
+JOIN programas AS p ON p.id = i.programa_id
+JOIN categorias AS c ON c.id = p.categoria
+JOIN maestros AS m ON m.id = p.maestro_id
+WHERE (p.horas_semanales >= 8 OR p.semanas >= 16)
+  AND NOT p.codigo LIKE 'CUR-%'
+  AND i.estado = 'activa'
+ORDER BY i.fecha_inscripcion DESC, p.nombre ASC
+LIMIT 5;
+
+-- Perfil demográfico de estudiantes inscritos: cálculo de edad, tiempo transcurrido y formato de texto
+SELECT
+  e.documento,
+  UPPER(CONCAT_WS(' ', e.primer_nombre, e.primer_apellido)) AS estudiante_completo,
+  LOWER(e.email) AS correo_contacto,
+  TIMESTAMPDIFF(YEAR, e.fecha_nacimiento, CURDATE()) AS edad_estudiante,
+  p.nombre AS programa,
+  DATE_FORMAT(i.fecha_inscripcion, '%d/%m/%Y') AS fecha_inscripcion_formato,
+  DATEDIFF(CURDATE(), i.fecha_inscripcion) AS dias_desde_inscripcion,
+  i.estado
+FROM estudiantes AS e
+JOIN inscripcion AS i ON i.estudiante_id = e.id
+JOIN programas AS p ON p.id = i.programa_id
+ORDER BY edad_estudiante DESC;
